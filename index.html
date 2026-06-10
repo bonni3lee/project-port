@@ -662,9 +662,36 @@
   .board-ph { margin: auto; min-height: 200px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.18); }
   .board-card--phone .board-ph { aspect-ratio: 9 / 19.5; max-width: 220px; }
   @media (max-width: 760px) { .board-head { grid-template-columns: 1fr; gap: 14px; } .board-grid { grid-template-columns: 1fr; margin-left: 0; } }
+  /* ── Password gate ── */
+  #gate { position: fixed; inset: 0; z-index: 99999; background: #000; display: flex; align-items: center; justify-content: center; }
+  #gate-form { display: flex; flex-direction: column; gap: 14px; width: 280px; padding: 24px; }
+  .gate-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); }
+  #gate-input { background: rgba(255,255,255,0.06); border: 1px solid var(--rule); border-radius: 8px; padding: 12px 14px; color: #fff; font-size: 15px; font-family: 'Inter', sans-serif; outline: none; }
+  #gate-input:focus { border-color: rgba(255,255,255,0.4); }
+  .gate-btn { background: #fff; color: #000; border: none; border-radius: 8px; padding: 12px; font-size: 14px; font-weight: 600; font-family: 'Inter', sans-serif; cursor: pointer; }
+  .gate-error { font-size: 12px; color: rgba(255,255,255,0.5); min-height: 14px; }
 </style>
 </head>
 <body>
+  <div id="gate">
+    <form id="gate-form" autocomplete="off">
+      <div class="gate-label">Protected · enter password</div>
+      <input id="gate-input" type="password" placeholder="Password" autocomplete="off" autofocus>
+      <button type="submit" class="gate-btn">Enter</button>
+      <div id="gate-error" class="gate-error"></div>
+    </form>
+  </div>
+  <script>
+  (function(){
+    var H='790faf44b5489c0fdd8bf4d0238009dd98b8adb1117627fe6f7238718d31d625';
+    var g=document.getElementById('gate');
+    function unlock(){g.style.display='none';document.documentElement.style.overflow='';}
+    if(sessionStorage.getItem('bl_unlocked')==='1'){unlock();}else{document.documentElement.style.overflow='hidden';}
+    async function sha(s){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');}
+    var f=document.getElementById('gate-form');
+    if(f)f.addEventListener('submit',async function(e){e.preventDefault();var h=await sha(document.getElementById('gate-input').value);if(h===H){sessionStorage.setItem('bl_unlocked','1');unlock();}else{document.getElementById('gate-error').textContent='Incorrect password';document.getElementById('gate-input').value='';}});
+  })();
+  </script>
 
   <nav class="side-nav">
     <a href="#hero" class="active">Intro</a>
@@ -778,7 +805,7 @@
             
           </div>
           <div class="domain-slide-caption">
-            <span class="domain-slide-tag">DoorDash · 2024</span>
+            <span class="domain-slide-tag">DoorDash · 2026</span>
             <h3 class="domain-slide-title">AI image editor for campaign and store assets</h3>
             <p class="domain-slide-desc">Generates on-brand campaign and storefront imagery from product scenes, without a photoshoot.</p>
           </div>
@@ -789,7 +816,7 @@
             <video src="media/doordash-product-catalog.mp4" poster="media/doordash-product-catalog.jpg" autoplay muted loop playsinline></video>
           </div>
           <div class="domain-slide-caption">
-            <span class="domain-slide-tag">DoorDash · 2024</span>
+            <span class="domain-slide-tag">DoorDash · 2026</span>
             <h3 class="domain-slide-title">AI catalog image generator</h3>
             <p class="domain-slide-desc">Generates food and product image variations at catalog scale, keeping store imagery consistent across thousands of items.</p>
           </div>
