@@ -683,13 +683,13 @@
   </div>
   <script>
   (function(){
-    var H='790faf44b5489c0fdd8bf4d0238009dd98b8adb1117627fe6f7238718d31d625';
+    var EXPECT=8277983651712702;
     var g=document.getElementById('gate');
     function unlock(){g.style.display='none';document.documentElement.style.overflow='';}
     if(sessionStorage.getItem('bl_unlocked')==='1'){unlock();}else{document.documentElement.style.overflow='hidden';}
-    async function sha(s){var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0');}).join('');}
+    function cyrb53(str,seed){seed=seed||0;var h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(var i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507);h1^=Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507);h2^=Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
     var f=document.getElementById('gate-form');
-    if(f)f.addEventListener('submit',async function(e){e.preventDefault();var h=await sha(document.getElementById('gate-input').value);if(h===H){sessionStorage.setItem('bl_unlocked','1');unlock();}else{document.getElementById('gate-error').textContent='Incorrect password';document.getElementById('gate-input').value='';}});
+    if(f)f.addEventListener('submit',function(e){e.preventDefault();var v=document.getElementById('gate-input').value;if(cyrb53(v)===EXPECT){sessionStorage.setItem('bl_unlocked','1');unlock();}else{document.getElementById('gate-error').textContent='Incorrect password';document.getElementById('gate-input').value='';}});
   })();
   </script>
 
